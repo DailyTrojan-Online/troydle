@@ -160,11 +160,11 @@
 	<div class="bottom-content">
 		{#if searchResults.length > 0 && !searchSelected && guessText != ""}
 			<div class="search-results">
-				{#each searchResults as result}
+				{#each {length: Math.min(searchResults.length, 7)} as _, i}
 					<button
 						on:click={() => {
-							selectGuess(result.refIndex);
-						}}>{result.item}</button
+							selectGuess(searchResults[i].refIndex);
+						}}>{searchResults[i].item}</button
 					>
 				{/each}
 			</div>
@@ -172,7 +172,7 @@
 		<div class="bottom-content-background"></div>
 		<button class="play" on:click={playClip}><IconPlayerPlayFilled /></button>
 		<div class="type-bar">
-			<input type="text" bind:value={guessText} on:input={input} />
+			<input type="text" bind:value={guessText} placeholder="Write your guess here!" on:input={input} />
 			<button on:click={submitGuess} disabled={guessText != "" && !searchSelected}>
 				{#if guessText != ""}
 					Submit
