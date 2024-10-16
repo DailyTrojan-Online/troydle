@@ -23,7 +23,6 @@
 	let chosenSong: { name: string; path: string } | undefined =
 		random.choice(songs);
 	let songIndex = songTitles.indexOf(chosenSong?.name ?? "");
-	console.log(songTitles);
 	const fuse = new Fuse(songTitles);
 	let audio: HTMLAudioElement;
 
@@ -45,7 +44,6 @@
 	function input() {
 		searchSelected = false;
 		searchResults = fuse.search(guessText);
-		console.log(searchResults);
 	}
 
 	function selectGuess(index: number) {
