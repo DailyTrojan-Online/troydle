@@ -1,0 +1,16 @@
+{
+    "songs": [
+        {
+            "name": "Tribute to Troy",
+            "path": "/music/Tribute_to_Troy.mp3"
+        },
+        {
+            "name": "America the Beautiful",
+            "path": "/music/America_the_Beautiful.mp3"
+        },
+        {
+            "name": "The Star-Spangled Banner",
+            "path": "/music/The_Star_Spangled_Banner.mp3"
+        }
+    ]
+}
