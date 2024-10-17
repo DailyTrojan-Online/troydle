@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Trumpet from "$lib/components/trumpet.svelte";
 	import { fade } from "svelte/transition";
 	import { tweened } from "svelte/motion";
 	import { IconX, IconCheck, IconPlayerPlayFilled } from "@tabler/icons-svelte";
@@ -29,7 +30,7 @@
 	let won = false;
 
 	let progressBarProgress = tweened(0, { duration: 1000, easing: linear });
-	let playing = true;
+	let playing = false;
 	let attempt = 0;
 	let maxAttempts = 6;
 	let guesses: { guess: string; result: Boolean | null }[] = new Array(
@@ -97,8 +98,9 @@
 
 {#if !playing}
 	<div class="splash-wrapper" transition:fade>
+		<Trumpet size={80}></Trumpet>
 		<h1>Bandle</h1>
-		<p>Guess the song played by the USC Marching band</p>
+		<h2>Guess the song played by the USC Marching band</h2>
 		<div class="flex-hor">
 			<button>Back</button>
 			<button
@@ -107,6 +109,11 @@
 				}}>Play</button
 			>
 		</div>
+		<p>{new Intl.DateTimeFormat('en-US', {
+			month: 'long',
+			day: '2-digit',
+			year: 'numeric'
+		  }).format(date)}</p>
 	</div>
 {/if}
 <div class="game-wrapper">
@@ -133,7 +140,7 @@
 					useGrouping: false,
 				})}
 			</div>
-			<div class="song-attempts">{maxAttempts - attempt} attempts left</div>
+			<div class="song-attempts">{maxAttempts - attempt} attempt{maxAttempts - attempt != 1 ? "s" : ""} left</div>
 			<div class="song-time">0:16</div>
 		</div>
 	</div>
@@ -191,6 +198,7 @@
 		<p>You guessed the song in {duration[attempt]} second{duration[attempt] > 1 ? "s":""}!</p>
 		{:else} 
 		<h1>Better luck next time.</h1>
+		<p>The song was:</p>
 		{/if}
 		<h2>{songTitles[songIndex]}</h2>
 	</div>
@@ -199,7 +207,7 @@
 
 <style>
 	.splash-wrapper {
-		background: rgb(188, 188, 188);
+		background: var(--cardinal);
 	}
 	h1, h2, p {
 		width: 100%;
@@ -383,6 +391,9 @@
 		border-bottom: 0;
 	}
 	.search-results button {
+		width: 100%;
+		border-radius: 0;
+		color: black;
 		background: rgb(238, 238, 238);
 		border: none;
 		height: 40px;
