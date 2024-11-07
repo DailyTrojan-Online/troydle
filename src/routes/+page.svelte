@@ -2,12 +2,15 @@
 	import Trumpet from "$lib/components/trumpet.svelte";
 	import { fade } from "svelte/transition";
 	import { tweened } from "svelte/motion";
-	import { IconX, IconCheck, IconPlayerPlayFilled } from "@tabler/icons-svelte";
+	import { IconX, IconCheck, IconPlayerPlayFilled, IconShare } from "@tabler/icons-svelte";
 	import { linear } from "svelte/easing";
 	import Music from "$lib/assets/music.json";
 	import { onMount } from "svelte";
 	import random from "random";
 	import Fuse from "fuse.js";
+    import { copy } from 'svelte-copy';
+	import { goto } from "$app/navigation";
+    import { page } from '$app/stores';
 	let songs: { name: string; path: string }[] = Music.songs;
 	let songTitles = songs.map((s) => s.name);
 	let guessText = "";
@@ -90,9 +93,13 @@
 		}, duration[attempt] * 1000);
 	}
 
-	let textCopyFormat;
+	let completeCopyFormat =
+		"I solved today's Bandle in {0} second{1}!\n{2}\n{3}\n{4}";
+	let failCopyFormat = "I couldn't solve today's Bandle, can you?\n{0}\n{1}";
+	let redSquare = "🟥";
+	let whiteSquare = "⬜";
 
-	function formatString(str: String, ...args: String[]) {
+	function formatString(str: string, ...args: any): string {
 		if (args.length) {
 			var key;
 
@@ -104,9 +111,27 @@
 		return str;
 	}
 
+    function resultShareString(): string {
+        let dateString = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date);
+        if(won) {
+            let emojiString = redSquare
+            for(let i = 0; i < attempt; i++) {
+                emojiString+= redSquare;
+            }
+            for(let i = 0; i < maxAttempts - attempt - 1; i++) {
+                emojiString += whiteSquare;
+            }
+            
+            return formatString(completeCopyFormat, attempt+1, attempt > 0 ? "s" : "",dateString, emojiString, $page.url.href)
+        }else {
+            return formatString(failCopyFormat, dateString, $page.url.href)
+        }
+    }
+
 	onMount(() => {
 		if (chosenSong == null) return;
 		audio = new Audio(chosenSong.path);
+		console.log(formatString(completeCopyFormat, "a", "ab", "abc"));
 	});
 </script>
 
@@ -116,7 +141,7 @@
 		<h1>Bandle</h1>
 		<h2>Guess the song played by the USC Marching band</h2>
 		<div class="flex-hor">
-			<button>Back</button>
+			<button on:click={() => goto("../#")}>Back</button>
 			<button
 				on:click={() => {
 					playing = true;
@@ -232,6 +257,8 @@
 				<p>The song was:</p>
 			{/if}
 			<h2>{songTitles[songIndex]}</h2>
+
+			<button use:copy={resultShareString()} class="button-share">Share Results <IconShare></IconShare></button>
 		</div>
 	</div>
 {/if}
@@ -361,6 +388,18 @@
 		justify-content: center;
 		align-items: center;
 	}
+    button.button-share {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 18px;
+        height: 50px;
+        text-wrap: nowrap;
+        width:fit-content;
+        padding: 0 30px ;
+        border-radius: 100px;
+    }
 	.type-bar button {
 		width: 100px;
 		border: none;
