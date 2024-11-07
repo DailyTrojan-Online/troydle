@@ -122,7 +122,7 @@
                 emojiString += whiteSquare;
             }
             
-            return formatString(completeCopyFormat, attempt+1, attempt > 0 ? "s" : "",dateString, emojiString, $page.url.href)
+            return formatString(completeCopyFormat, duration[attempt], attempt > 0 ? "s" : "",dateString, emojiString, $page.url.href)
         }else {
             return formatString(failCopyFormat, dateString, $page.url.href)
         }
