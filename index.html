@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Trojan Games - Bandle</title>
+    <link rel="icon" href="../imgs/bandle.png" type="image/x-icon">
+    <link rel="stylesheet" href="../dailytrojan-lib/gameStyles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter&amp;family=Source+Serif+Pro:wght@400;900&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <script src="../dailytrojan-lib/gameCore.js" defer></script>
+    <script src="../scripts/bandleSongs.js"></script>
+    <script src="../scripts/bandle.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <img id="dt-logo" src="../imgs/dt-logo.png" height="50" width=auto style="cursor: pointer;"
+            onclick="homeRedirect()" alt="Daily Trojan Logo" />
+    </header>
+    <div class="game-splash-wrapper -game-splash-hidden" id="splash">
+        <img width="80" src="../imgs/bandle.svg" />
+        <h1>Bandle</h1>
+        <h2>Guess the song played by the USC Marching band</h2>
+        <div class="flex-hor">
+            <button onclick="back()">Back</button>
+            <button onclick="startGame()">Play</button>
+        </div>
+        <p id="splash-date">date</p>
+    </div>
+    <main>
+        <div class="game-wrapper">
+            <div class="top-content">
+                <h1>Bandle</h1>
+                <div class="song-bar">
+                    <div class="song-progress" style:width={`min(calc(${($progressBarProgress * 100) / 16}% + ${3 * (-8
+                        * Math.pow($progressBarProgress / 16 - 0.5, 2) + 2)}px), 100%)`}></div>
+                    <div class="overlay">
+                        <div class="overlay-1s"></div>
+                        <div class="overlay-1s" class:disabled={attempt < 1}></div>
+                        <div class="overlay-2s" class:disabled={attempt < 2}></div>
+                        <div class="overlay-3s" class:disabled={attempt < 3}></div>
+                        <div class="overlay-4s" class:disabled={attempt < 4}></div>
+                        <div class="overlay-5s" class:disabled={attempt < 5}></div>
+                    </div>
+                </div>
+                <div class="song-details">
+                    <div class="song-time" id="song-current-time">
+                        0:00
+                        <!-- {Math.round($progressBarProgress).toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                        })} -->
+                    </div>
+                    <div class="song-attempts" id="song-attempts-remaining">
+                        X attempts left
+                    </div>
+                    <div class="song-time">0:16</div>
+                </div>
+            </div>
+            <div class="fill-scroll">
+                <div class="attempts" id="attempt-parent">
+                    <!-- {#each { length: maxAttempts } as _, i}
+                    <div class="attempt" class:active={attempt==i}>
+                        <div>{guesses[i].guess}</div>
+                        <div class="guess-info">
+                            {#if guesses[i].result == null}
+                            {i + 1}
+                            {:else if !guesses[i].result}
+                            <IconX color="var(--cardinal)"></IconX>
+                            {:else if guesses[i].result}
+                            <IconCheck color="green"></IconCheck>
+                            {/if}
+                        </div>
+                    </div>
+                    {/each} -->
+                </div>
+            </div>
+            <div class="bottom-content">
+                <!-- {#if searchResults.length > 0 && !searchSelected && guessText != ""}
+                <div class="search-results">
+                    {#each { length: Math.min(searchResults.length, 7) } as _, i}
+                    <button on:click={()=> {
+                        selectGuess(searchResults[i].refIndex);
+                        }}>{searchResults[i].item}</button>
+                    {/each}
+                </div>
+                {/if} -->
+                <div class="bottom-content-background"></div>
+                <div class="type-bar">
+                    <button class="play" on:click={playClip}>
+                        <i class="ti ti-player-play-filled"></i>
+                    </button>
+                    <input type="text" bind:value={guessText} placeholder="Write your guess here!" on:input={input} />
+                    <button on:click={submitGuess} disabled={guessText !="" && !searchSelected}>
+                        <!-- {#if guessText != ""}
+                        Submit
+                        {:else if attempt + 1 < maxAttempts} Skip (+{interval[attempt + 1]}s) {:else} Give Up {/if} -->
+                        submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

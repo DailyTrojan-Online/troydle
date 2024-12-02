@@ -1,0 +1,269 @@
+
+
+
+.game-splash-wrapper {
+    background: var(--cardinal);
+}
+
+.game-splash-wrapper h1 {
+    color: white;
+}
+
+.game-splash-wrapper h2 {
+    color: white;
+}
+
+.game-splash-wrapper p {
+    color: white;
+}
+
+
+h1,
+h2,
+p {
+    width: 100%;
+    text-align: center;
+}
+
+.game-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.song-bar {
+    width: 100%;
+    height: 40px;
+    background: #e2e2e2;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.song-progress {
+    position: absolute;
+    height: 100%;
+    background: var(--cardinal);
+    border-radius: 4px;
+    top: 0;
+}
+
+.overlay {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+}
+
+.overlay * {
+    height: 100%;
+    outline: 4px solid white;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.overlay *:first-child {
+    border-top-left-radius: 10px ;
+    border-bottom-left-radius: 10px ;
+}
+.overlay *:last-child {
+    border-top-right-radius: 10px ;
+    border-bottom-right-radius: 10px ;
+}
+
+.overlay *.disabled {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.overlay-1s {
+    width: calc(1 / 16 * 100%);
+}
+
+.overlay-2s {
+    width: calc(2 / 16 * 100%);
+}
+
+.overlay-3s {
+    width: calc(3 / 16 * 100%);
+}
+
+.overlay-4s {
+    width: calc(4 / 16 * 100%);
+}
+
+.overlay-5s {
+    width: calc(5 / 16 * 100%);
+}
+
+.song-details {
+    font-family: 'Geist Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+}
+
+.attempts {
+    width: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 0;
+}
+
+.attempt {
+    border: 1px solid var(--outline);
+    box-sizing: border-box;
+    border-radius: 10px;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    padding-right: 7px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+.attempt * {
+    height: fit-content;
+}
+
+.active {
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.type-bar {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.type-bar input {
+    width: 100%;
+    border: 1px solid var(--outline-dark);
+    box-sizing: border-box;
+    border-radius: 10px;
+    height: 45px;
+    padding: 0 10px;
+}
+
+
+button.button-share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 18px;
+    height: 50px;
+    text-wrap: nowrap;
+    width: fit-content;
+    padding: 0 30px;
+    border-radius: 100px;
+}
+
+.type-bar button {
+    width: 100px;
+    background: var(--cardinal);
+    color: white;
+    cursor: pointer;
+}
+
+.type-bar button:disabled {
+    background: var(--button-bg);
+    border: 1px solid var(--outline);
+    color: #96979f;
+    cursor: not-allowed;
+}
+
+button.play {
+    width: 50px;
+    border: none;
+    background: var(--cardinal);
+    color: white;
+    border-radius: 100%;
+    font-size: 16px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.top-content {
+    flex-shrink: 0;
+}
+
+.fill-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: auto;
+}
+
+.bottom-content {
+    width: 100%;
+    position: relative;
+    flex-shrink: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.bottom-content-background {
+    width: 100vw;
+    height: 100%;
+    position: absolute;
+    background: var(--raised-surface);
+    border-top: 1px solid var(--outline-dark);
+    top: 0;
+    left: calc(-1 * 0.5 * (100vw - min(calc(100vw - 80px), 500px)));
+    z-index: -100;
+}
+
+.guess-info {
+    font-family: "Geist Mono", monospace;
+    color: var(--outline-dark);
+    display: flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-results {
+    position: absolute;
+    width: 100%;
+    bottom: 179px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--outline-dark);
+    border-bottom: 0;
+}
+
+.search-results button {
+    width: 100%;
+    border-radius: 0;
+    color: black;
+    background: var(--raised-surface);
+    border: none;
+    height: 40px;
+    font-size: 18px;
+    font-family: 'Geist Mono', monospace;
+    text-align: left;
+    border-bottom: 1px solid gray;
+}
+
+.search-results button:hover {
+    background: #f9fafc;
+}
