@@ -8,11 +8,8 @@
     <link rel="icon" href="./imgs/bandle.png" type="image/x-icon">
     <link rel="stylesheet" href="./dailytrojan-lib/gameStyles.css">
     <link rel="stylesheet" href="./styles/styles.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter&amp;family=Source+Serif+Pro:wght@400;900&amp;display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-
+    <link rel="stylesheet" href="./dailytrojan-lib/icons/tabler-icons.css">
+    <link rel="stylesheet" href="./dailytrojan-lib/fonts/fonts.css">
     <script src="./dailytrojan-lib/gameCore.js" defer></script>
     <script src="./scripts/bandleSongs.js"></script>
     <script src="./scripts/bandle.js" defer></script>
@@ -23,7 +20,7 @@
         <img id="dt-logo" src="./imgs/dt-logo.png" height="50" width=auto style="cursor: pointer;"
             onclick="homeRedirect()" alt="Daily Trojan Logo" />
     </header>
-    <div class="game-splash-wrapper -game-splash-hidden" id="splash">
+    <div class="game-splash-wrapper game-splash-hidden" id="splash">
         <img width="80" src="./imgs/bandle.svg" />
         <h1>Bandle</h1>
         <h2>Guess the song played by the USC Marching band</h2>
@@ -91,7 +88,6 @@
                     {/each}
                 </div>
                 {/if} -->
-                <div class="bottom-content-background"></div>
                 <div class="type-bar">
                     <button class="play" on:click={playClip}>
                         <i class="ti ti-player-play-filled"></i>
