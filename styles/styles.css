@@ -152,6 +152,8 @@ p {
 .type-bar input {
     width: 100%;
     border: 1px solid var(--outline-dark);
+    background: var(--raised-surface);
+    color: var(--main-text-color);
     box-sizing: border-box;
     border-radius: 10px;
     height: 45px;
