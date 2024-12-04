@@ -32,7 +32,7 @@ p {
 .song-bar {
     width: 100%;
     height: 40px;
-    background: #e2e2e2;
+    background: var(--raised-surface-heavy);
     border-radius: 10px;
     margin-bottom: 15px;
     position: relative;
@@ -62,7 +62,7 @@ p {
 
 .overlay * {
     height: 100%;
-    outline: 4px solid white;
+    outline: 4px solid var(--body-background);
     border-radius: 4px;
     transition: background 0.3s;
 }
@@ -79,6 +79,10 @@ p {
 
 .overlay *.disabled {
     background: rgba(255, 255, 255, 0.75);
+}
+
+.dark .overlay *.disabled {
+    background: rgba(31, 32, 32, 0.75);
 }
 
 .overlay-1s {
@@ -249,11 +253,11 @@ button.play-small {
 }
 
 .guess-info .ti-x {
-    color: var(--cardinal);
+    color: var(--error);
     font-size: 24px;
 }
 .guess-info .ti-check {
-    color: green;
+    color: var(--success);
     font-size: 24px;
 }
 
@@ -269,7 +273,7 @@ button.play-small {
     border-radius: 10px;
     background: var(--raised-surface);
     overflow: hidden;
-    overflow: scroll;
+    overflow-y: auto;
 }
 
 .search-results.hidden {
@@ -279,7 +283,7 @@ button.play-small {
 .search-results button {
     width: 100%;
     border-radius: 0;
-    color: black;
+    color: var(--button-text);
     border: none;
     height: 35px;
     font-family: 'Geist Mono', monospace;
