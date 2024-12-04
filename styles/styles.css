@@ -81,7 +81,7 @@ p {
     background: rgba(255, 255, 255, 0.75);
 }
 
-.dark .overlay *.disabled {
+.dark-mode .overlay *.disabled {
     background: rgba(31, 32, 32, 0.75);
 }
 
