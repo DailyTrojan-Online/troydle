@@ -61,7 +61,7 @@ function initializeBandle() {
 
 	generateAttemptElements();
 
-	let savedDate = loadData("today");
+	let savedDate = loadData("bandle-today");
 	if (savedDate != null && savedDate.date == gameSeed) {
 		attempt = savedDate.attempt;
 		attemptResults = savedDate.attemptResults;
@@ -172,14 +172,14 @@ function saveGameProgress() {
 		won: won,
 		date: gameSeed,
 	};
-	saveData("today", gameObject);
+	saveData("bandle-today", gameObject);
 	console.log("Game Progress Saved");
 }
 
 function saveGameToHistory() {
-	let history = loadData("history") ?? [];
+	let history = loadData("bandle-history") ?? [];
 	history.push({ date: gameSeed, won: won, attempt: attempt });
-	saveData("history", history);
+	saveData("bandle-history", history);
 }
 
 function saveData(id, data) {
@@ -259,7 +259,7 @@ function setupModalUI(won) {
 }
 
 function calculateStatHistory() {
-	let history = loadData("history");
+	let history = loadData("bandle-history");
 	if (history == null) return{ totalWins: 0, totalPlays: 0, dailyStreak: 0, winStreak: 0 };
 	let totalWins = history.map((h) => h.won).filter((w) => w).length;
 	let totalPlays = history.length;
