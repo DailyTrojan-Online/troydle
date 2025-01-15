@@ -209,7 +209,16 @@ let redSquare = "🟥";
 let whiteSquare = "⬜";
 
 function copyResultsString() {
-	DTGCore.copyToClipboard(resultShareString());
+	if(navigator.userAgentData.mobile) {
+		navigator.share({
+			text: resultShareString(),
+			url: window.location.href,
+		})
+	} else {
+		DTGCore.showToast("Results copied to clipboard!", "ti-clipboard");
+		DTGCore.copyToClipboard(resultShareString());
+
+	}
 }
 
 function resultShareString() {
