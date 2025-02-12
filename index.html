@@ -80,6 +80,7 @@
     </main>
     <div class="modal-wrapper" id="result-modal">
         <div class="modal-content">
+            <div class="modal-inner">
             <img width="80" src="./imgs/bandle.svg" />
             <h1 id="modal-title">Great job!</h1>
             <div class="history-stats">
@@ -102,18 +103,18 @@
             </div>
             <p>The song was:</p>
             <div class="flex-hor">
-
                 <button class="play-small" onclick="toggleModalSong()">
                     <i id="modal-player-icon" class="ti ti-player-play-filled"></i>
                 </button>
                 <h2 id="song-title"></h2>
             </div>
-            <div class="flex-hor">
 
-                <button onclick="viewGame()"><i class="ti ti-arrow-left"></i>Show Game</button>
+            <button class="close-button" onclick="viewGame()"><i class="ti ti-x"></i></button>
+            <div class="flex-hor">
+                <button onclick="DTGCore.homeRedirect()"><i class="ti ti-device-gamepad"></i>All Games</button>
                 <button onclick="copyResultsString()" class="button-share"><i class="ti ti-share"></i> Share
                     Results</button>
-            </div>
+            </div></div>
         </div>
     </div>
 </body>
