@@ -306,3 +306,10 @@ button.play-small {
 .modal-content p {
     margin-bottom: 10px;
 }
+a {
+    color: unset;
+    text-decoration: unset;
+}
+a:hover {
+    color: var(--cardinal)
+}
