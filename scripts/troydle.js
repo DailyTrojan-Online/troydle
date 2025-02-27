@@ -33,7 +33,7 @@ let chosenSong;
 let songIndex;
 let audio;
 
-function initializeBandle() {
+function initializeTroydle() {
 	gameSplash = document.getElementById("splash");
 	splashDate = document.getElementById("splash-date");
 	window.DTGCore = new DTGameCore(gameSplash, splashDate);
@@ -61,7 +61,7 @@ function initializeBandle() {
 
 	generateAttemptElements();
 
-	let savedDate = loadData("bandle-today");
+	let savedDate = loadData("troydle-today");
 	if (savedDate != null && savedDate.date == gameSeed) {
 		attempt = savedDate.attempt;
 		attemptResults = savedDate.attemptResults;
@@ -80,7 +80,7 @@ function initializeBandle() {
 	}
 	updateUIWithAttempt();
 
-	console.log("Bandle Initialized");
+	console.log("Troydle Initialized");
 }
 
 function generateAttemptElements() {
@@ -172,14 +172,14 @@ function saveGameProgress() {
 		won: won,
 		date: gameSeed,
 	};
-	saveData("bandle-today", gameObject);
+	saveData("troydle-today", gameObject);
 	console.log("Game Progress Saved");
 }
 
 function saveGameToHistory() {
-	let history = loadData("bandle-history") ?? [];
+	let history = loadData("troydle-history") ?? [];
 	history.push({ date: gameSeed, won: won, attempt: attempt });
-	saveData("bandle-history", history);
+	saveData("troydle-history", history);
 }
 
 function saveData(id, data) {
@@ -204,8 +204,8 @@ function viewGame() {
 	document.getElementById("result-modal").classList.remove("modal-visible");
 }
 let completeCopyFormat =
-	"I solved today's Bandle in {0} second{1}!\n{2}\n{3}\n{4}";
-let failCopyFormat = "I couldn't solve today's Bandle, can you?\n{0}\n{1}";
+	"I solved today's Troydle in {0} second{1}!\n{2}\n{3}\n{4}";
+let failCopyFormat = "I couldn't solve today's Troydle, can you?\n{0}\n{1}";
 let redSquare = "🟥";
 let whiteSquare = "🟨";
 
@@ -283,7 +283,7 @@ function setupModalUI(won) {
 }
 
 function calculateStatHistory() {
-	let history = loadData("bandle-history");
+	let history = loadData("troydle-history");
 	if (history == null)
 		return { totalWins: 0, totalPlays: 0, dailyStreak: 0, winStreak: 0 };
 	let totalWins = history.map((h) => h.won).filter((w) => w).length;
@@ -447,4 +447,4 @@ function setProgressBar() {
 	}, 1);
 }
 
-initializeBandle();
+initializeTroydle();
