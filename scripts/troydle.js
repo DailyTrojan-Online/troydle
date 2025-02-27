@@ -207,7 +207,7 @@ let completeCopyFormat =
 	"I solved today's Troydle in {0} second{1}!\n{2}\n{3}\n{4}";
 let failCopyFormat = "I couldn't solve today's Troydle, can you?\n{0}\n{1}";
 let redSquare = "🟥";
-let whiteSquare = "🟨";
+let whiteSquare = "⬜";
 
 function copyResultsString() {
 	if (mobileCheck()) {
