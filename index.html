@@ -31,6 +31,7 @@
             <button onclick="startGame()" id="game-action-button">Play</button>
         </div>
         <p id="splash-date"></p>
+        <p id="splash-credits">Game by Noah Pinales</p>
     </div>
     <main>
         <div class="game-wrapper">
@@ -103,12 +104,12 @@
                         <p>Win Streak</p>
                     </div>
                 </div>
-                <p>The song was:</p>
+                <h2 style="font-weight: normal">The song was <strong id="song-title"></strong></h2>
+                <br>
                 <div class="flex-hor">
-                    <button class="play-small" onclick="toggleModalSong()">
-                        <i id="modal-player-icon" class="ti ti-player-play-filled"></i>
+                    <button onclick="externalRedirect()">
+                        <i id="modal-player-icon" class="ti ti-player-play-filled"></i> Listen on Spotify
                     </button>
-                    <h2 id="song-title"></h2>
                 </div>
 
                 <button class="close-button" onclick="viewGame()"><i class="ti ti-x"></i></button>

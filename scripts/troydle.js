@@ -209,6 +209,15 @@ let failCopyFormat = "I couldn't solve today's Troydle, can you?\n{0}\n{1}";
 let redSquare = "🟥";
 let whiteSquare = "⬜";
 
+function externalRedirect() {
+	// Redirect to the song's Spotify page
+	if (chosenSong.url) {
+		window.open(chosenSong.url, "_blank");
+	} else {
+		DTGCore.showToast("Something went wrong.", "ti-x");
+	}
+}
+
 function copyResultsString() {
 	if (mobileCheck()) {
 		navigator.share({
