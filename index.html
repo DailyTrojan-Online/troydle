@@ -10,18 +10,24 @@
     <link rel="stylesheet" href="./dailytrojan-lib/gameStyles.css">
     <link rel="stylesheet" href="./styles/styles.css">
     <link rel="stylesheet" href="./dailytrojan-lib/icons/tabler-icons.css">
-    <script src="./dailytrojan-lib/gameCore.js" defer></script>
+    <script src="./dailytrojan-lib/gameCoreVanilla.js" defer></script>
     <script src="./scripts/fuse.basic.min.js"></script>
     <script src="./scripts/troydleSongs.js"></script>
     <script src="./scripts/troydle.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <a href="https://dailytrojan.com/games/">
-            <img id="dt-logo" src="./imgs/dt-logo.png" height="50" width=auto style="cursor: pointer;"
-                onclick="homeRedirect()" alt="Daily Trojan Logo" /></a>
-    </header>
+<header>
+    <div class="header-group header-group-left">
+        <img id="dt-logo" src="./dailytrojan-lib/Games_Logo.svg" height="50" width=auto style="cursor: pointer;"
+                onclick="DTGCore.homeRedirect()" alt="Daily Trojan Logo" />
+        
+    </div>
+                <h1><span style="color: var(--cardinal)">Troy</span>dle</h1>
+    <div class="header-group header-group-right">
+        
+    </div>
+</header>
     <div class="game-splash-wrapper" id="splash">
         <img width="80" src="./imgs/troydle.svg" />
         <h1>Troydle</h1>
@@ -37,7 +43,6 @@
         <div class="game-wrapper">
             <div class="top-content">
 
-                <h1><span style="color: var(--cardinal)">Troy</span>dle</h1>
                 <div class="song-bar">
                     <div class="song-progress" id="progress-bar"></div>
                     <div class="overlay">
