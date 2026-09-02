@@ -33,54 +33,81 @@ let chosenSong;
 let songIndex;
 let audio;
 
-function initializeTroydle() {
-	gameSplash = document.getElementById("splash");
-	splashDate = document.getElementById("splash-date");
-	window.DTGCore = new DTGameCore(gameSplash, splashDate);
-
-	attemptParent = document.getElementById("attempt-parent");
-	progressBar = document.getElementById("progress-bar");
-	songCurrentTime = document.getElementById("song-current-time");
-	remainingAttemptsElement = document.getElementById("song-attempts-remaining");
-	searchResultWrapper = document.getElementById("search-results");
-	textInput = document.getElementById("text-input");
-	submitButton = document.getElementById("submit-button");
-	songTitles = songs.map((s) => s.name);
-	fuseSearch = new Fuse(songTitles, { includeScore: true, threshold: 0.3 });
-
-	gameSeed = new Intl.DateTimeFormat("en-US", {
-		year: "numeric",
-		month: "2-digit",
-		day: "2-digit",
-	}).format(new Date());
-
-	chosenSong = DTGCore.randomArrayElement(songs);
-	if (chosenSong == null) return;
-	audio = new Audio(chosenSong.path);
-	songIndex = songTitles.indexOf(chosenSong.name ?? "");
-
-	generateAttemptElements();
-
-	let savedDate = loadData("troydle-today");
-	if (savedDate != null && savedDate.date == gameSeed) {
-		attempt = savedDate.attempt;
-		attemptResults = savedDate.attemptResults;
-		gameFinished = savedDate.complete;
-		won = savedDate.won;
-		if (gameFinished) {
-			disableGameplay();
-			setupModalUI(won);
-		}
-	}
-
-	for (let i = 1; i < 6; i++) {
-		attemptOverlayElements.push(
-			document.getElementById(`attempt-overlay-${i}`)
+function analytics(event, error, data) {
+	try {
+		let payload = { url: window.location.href, game: "troydle", event: event };
+		if (error) payload.error = String(error);
+		if (data) payload.data = data;
+		navigator.sendBeacon(
+			"https://ancile.dailytrojandigitalmanaging.workers.dev/api/analytics/games",
+			new Blob([JSON.stringify(payload)], { type: "application/json" })
 		);
+	} catch (e) {
+		// analytics should never break the game
 	}
-	updateUIWithAttempt();
+}
 
-	console.log("Troydle Initialized");
+function initializeTroydle() {
+	try {
+		gameSplash = document.getElementById("splash");
+		splashDate = document.getElementById("splash-date");
+		window.DTGCore = new DTGameCore(gameSplash, splashDate);
+
+		attemptParent = document.getElementById("attempt-parent");
+		progressBar = document.getElementById("progress-bar");
+		songCurrentTime = document.getElementById("song-current-time");
+		remainingAttemptsElement = document.getElementById("song-attempts-remaining");
+		searchResultWrapper = document.getElementById("search-results");
+		textInput = document.getElementById("text-input");
+		submitButton = document.getElementById("submit-button");
+		songTitles = songs.map((s) => s.name);
+		fuseSearch = new Fuse(songTitles, { includeScore: true, threshold: 0.3 });
+
+		gameSeed = new Intl.DateTimeFormat("en-US", {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+		}).format(new Date());
+
+		chosenSong = DTGCore.randomArrayElement(songs);
+		if (chosenSong == null) return;
+		audio = new Audio(chosenSong.path);
+		songIndex = songTitles.indexOf(chosenSong.name ?? "");
+
+		generateAttemptElements();
+
+		let savedDate = loadData("troydle-today");
+		if (savedDate != null && savedDate.date == gameSeed) {
+			attempt = savedDate.attempt;
+			attemptResults = savedDate.attemptResults;
+			gameFinished = savedDate.complete;
+			won = savedDate.won;
+			if (gameFinished) {
+				disableGameplay();
+				setupModalUI(won);
+			}
+		}
+
+		for (let i = 1; i < 6; i++) {
+			attemptOverlayElements.push(
+				document.getElementById(`attempt-overlay-${i}`)
+			);
+		}
+		updateUIWithAttempt();
+
+		console.log("Troydle Initialized");
+		analytics("page_load", null, {
+			alreadyPlayed: gameFinished,
+			attempt: attempt,
+			totalPlays: calculateStatHistory().totalPlays,
+			dailyStreak: calculateStatHistory().dailyStreak,
+		});
+	} catch (e) {
+		analytics("error", e, {
+			attempt: attempt,
+			gameFinished: gameFinished,
+		});
+	}
 }
 
 function generateAttemptElements() {
@@ -105,43 +132,61 @@ function generateAttemptElements() {
 
 let won = false;
 function submitOrSkip() {
-	won = songIndex == selectedSearch;
-	if (guessText == "" || !selectedGuess) {
-		attemptResults.push({ title: "Skipped", result: false });
-	} else {
-		attemptResults.push({ title: guessText, result: won });
-	}
-	selectedSearch = -1;
-	selectedGuess = false;
+	try {
+		won = songIndex == selectedSearch;
+		if (guessText == "" || !selectedGuess) {
+			attemptResults.push({ title: "Skipped", result: false });
+		} else {
+			attemptResults.push({ title: guessText, result: won });
+		}
+		selectedSearch = -1;
+		selectedGuess = false;
 
-	textInput.value = "";
-	guessText = "";
-	searchResultWrapper.classList.add("hidden");
-	resetProgressBar();
-	updateUIWithAttempt();
+		textInput.value = "";
+		guessText = "";
+		searchResultWrapper.classList.add("hidden");
+		resetProgressBar();
+		updateUIWithAttempt();
 
-	if (won || attempt >= maxAttempts) {
-		saveGameToHistory();
-		gameEnd();
-		return;
+		if (won || attempt >= maxAttempts) {
+			saveGameToHistory();
+			gameEnd();
+			return;
+		}
+		attempt++;
+		if (attempt >= maxAttempts) {
+			won = false;
+			saveGameToHistory();
+			gameEnd();
+		}
+		updateUIWithAttempt();
+		saveGameProgress();
+	} catch (e) {
+		analytics("error", e, {
+			attempt: attempt,
+			gameFinished: gameFinished,
+		});
 	}
-	attempt++;
-	if (attempt >= maxAttempts) {
-		won = false;
-		saveGameToHistory();
-		gameEnd();
-	}
-	updateUIWithAttempt();
-	saveGameProgress();
 }
 
 function gameEnd() {
-	gameFinished = true;
-	disableGameplay();
-	document.getElementById("result-modal").classList.add("modal-visible");
-	saveGameProgress();
-	setupModalUI(won);
-	audio.currentTime = 0;
+	try {
+		gameFinished = true;
+		disableGameplay();
+		document.getElementById("result-modal").classList.add("modal-visible");
+		saveGameProgress();
+		setupModalUI(won);
+		audio.currentTime = 0;
+		analytics(won ? "game_win" : "game_lose", null, {
+			attempt: attempt,
+			localhost: window.location.hostname === "localhost",
+		});
+	} catch (e) {
+		analytics("error", e, {
+			attempt: attempt,
+			gameFinished: gameFinished,
+		});
+	}
 }
 
 function toggleModalSong() {
@@ -219,14 +264,26 @@ function externalRedirect() {
 }
 
 function copyResultsString() {
-	if (mobileCheck()) {
-		navigator.share({
-			text: resultShareString(),
-			url: window.location.href,
+	try {
+		if (mobileCheck()) {
+			navigator.share({
+				text: resultShareString(),
+				url: window.location.href,
+			});
+		} else {
+			DTGCore.showToast("Results copied to clipboard!", "ti-clipboard");
+			DTGCore.copyToClipboard(resultShareString());
+		}
+		analytics("share", null, {
+			mobile: mobileCheck(),
+			shareText: resultShareString(),
+			attempt: attempt,
 		});
-	} else {
-		DTGCore.showToast("Results copied to clipboard!", "ti-clipboard");
-		DTGCore.copyToClipboard(resultShareString());
+	} catch (e) {
+		analytics("error", e, {
+			attempt: attempt,
+			gameFinished: gameFinished,
+		});
 	}
 }
 const mobileCheck = function () {
@@ -369,9 +426,20 @@ function updateUIWithAttempt() {
 }
 
 function startGame() {
-	DTGCore.hideSplashScreen();
-	if (gameFinished) {
-		document.getElementById("result-modal").classList.add("modal-visible");
+	try {
+		DTGCore.hideSplashScreen();
+		analytics("game_start", null, {
+			alreadyPlayed: gameFinished,
+			attempt: attempt,
+		});
+		if (gameFinished) {
+			document.getElementById("result-modal").classList.add("modal-visible");
+		}
+	} catch (e) {
+		analytics("error", e, {
+			attempt: attempt,
+			gameFinished: gameFinished,
+		});
 	}
 }
 function playSong() {
