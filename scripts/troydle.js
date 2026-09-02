@@ -38,10 +38,14 @@ function analytics(event, error, data) {
 		let payload = { url: window.location.href, game: "troydle", event: event };
 		if (error) payload.error = String(error);
 		if (data) payload.data = data;
-		navigator.sendBeacon(
-			"https://ancile.dailytrojandigitalmanaging.workers.dev/api/analytics/games",
-			new Blob([JSON.stringify(payload)], { type: "application/json" })
-		);
+		fetch(
+            "https://ancile.dailytrojandigitalmanaging.workers.dev/api/analytics/games",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            },
+        ).catch(() => {});
 	} catch (e) {
 		// analytics should never break the game
 	}
