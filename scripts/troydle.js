@@ -100,17 +100,19 @@ function initializeTroydle() {
 		updateUIWithAttempt();
 
 		console.log("Troydle Initialized");
-		analytics("page_load", null, {
+		DTGCore.trackAnalytics("page_load", "troydle", {
 			alreadyPlayed: gameFinished,
 			attempt: attempt,
 			totalPlays: calculateStatHistory().totalPlays,
 			dailyStreak: calculateStatHistory().dailyStreak,
-		});
+    })
+            
+		
 	} catch (e) {
-		analytics("error", e, {
+		DTGCore.trackAnalytics("error", "troydle", {
 			attempt: attempt,
 			gameFinished: gameFinished,
-		});
+    }, e)
 	}
 }
 
@@ -166,10 +168,12 @@ function submitOrSkip() {
 		updateUIWithAttempt();
 		saveGameProgress();
 	} catch (e) {
-		analytics("error", e, {
+		
+		DTGCore.trackAnalytics("error", "troydle", {
 			attempt: attempt,
 			gameFinished: gameFinished,
-		});
+    }, e)
+		
 	}
 }
 
@@ -181,15 +185,15 @@ function gameEnd() {
 		saveGameProgress();
 		setupModalUI(won);
 		audio.currentTime = 0;
-		analytics(won ? "game_win" : "game_lose", null, {
+		DTGCore.trackAnalytics(won ? "game_win" : "game_lose", "troydle",{
 			attempt: attempt,
 			localhost: window.location.hostname === "localhost",
-		});
+		})
 	} catch (e) {
-		analytics("error", e, {
+		DTGCore.trackAnalytics("error", "troydle", {
 			attempt: attempt,
 			gameFinished: gameFinished,
-		});
+    }, e)
 	}
 }
 
@@ -278,16 +282,16 @@ function copyResultsString() {
 			DTGCore.showToast("Results copied to clipboard!", "ti-clipboard");
 			DTGCore.copyToClipboard(resultShareString());
 		}
-		analytics("share", null, {
+		DTGCore.trackAnalytics("share", "troydle",{
 			mobile: mobileCheck(),
 			shareText: resultShareString(),
 			attempt: attempt,
-		});
+		})
 	} catch (e) {
-		analytics("error", e, {
+		DTGCore.trackAnalytics("error", "troydle",{
 			attempt: attempt,
 			gameFinished: gameFinished,
-		});
+		}, e)
 	}
 }
 const mobileCheck = function () {
@@ -432,7 +436,7 @@ function updateUIWithAttempt() {
 function startGame() {
 	try {
 		DTGCore.hideSplashScreen();
-		analytics("game_start", null, {
+		DTGCore.trackAnalytics("game_start", "troydle",{
 			alreadyPlayed: gameFinished,
 			attempt: attempt,
 		});
@@ -440,10 +444,10 @@ function startGame() {
 			document.getElementById("result-modal").classList.add("modal-visible");
 		}
 	} catch (e) {
-		analytics("error", e, {
+		DTGCore.trackAnalytics("error", "troydle",{
 			attempt: attempt,
 			gameFinished: gameFinished,
-		});
+		}, e);
 	}
 }
 function playSong() {
