@@ -1,0 +1,83 @@
+name: Package and Release Website
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: publish-game-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package website
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f index.html
+
+          zip -r "$RUNNER_TEMP/game.zip" . \
+            -x '.git/*' \
+               '.github/*' \
+               'node_modules/*' \
+               '.env' \
+               '.env.*' \
+               '.DS_Store' \
+               '*/.DS_Store'
+
+      - name: Generate manifest
+        env:
+          GAME_ID: ${{ github.event.repository.name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          VERSION="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          TAG="game-${VERSION}"
+          HASH="$(sha256sum "$RUNNER_TEMP/game.zip" | cut -d ' ' -f 1)"
+          DOWNLOAD_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/game.zip"
+
+          jq -n \
+            --arg id "$GAME_ID" \
+            --arg version "$VERSION" \
+            --arg url "$DOWNLOAD_URL" \
+            --arg sha256 "$HASH" \
+            '{
+              id: $id,
+              version: $version,
+              url: $url,
+              sha256: $sha256,
+              entrypoint: "index.html"
+            }' > "$RUNNER_TEMP/manifest.json"
+
+      - name: Publish game release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          GAME_ID: ${{ github.event.repository.name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          VERSION="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          TAG="game-${VERSION}"
+
+          gh release create "$TAG" \
+            "$RUNNER_TEMP/game.zip" \
+            "$RUNNER_TEMP/manifest.json" \
+            --target "$GITHUB_SHA" \
+            --title "${GAME_ID} ${VERSION}" \
+            --notes "Automated website package from ${GITHUB_SHA}." \
+            --draft
+
+          gh release edit "$TAG" --draft=false --latest
